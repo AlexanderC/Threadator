@@ -208,9 +208,4 @@ class Runtime
     {
         return $this->pid;
     }
-
-    public static function tickFunction()
-    {
-
-    }
 } 
