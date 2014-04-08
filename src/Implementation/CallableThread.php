@@ -45,18 +45,14 @@ class CallableThread extends Thread
     }
 
     /**
-     * @return bool
+     * @return void
      */
     protected function unload()
-    {
-        return false;
-    }
+    {   }
 
     /**
      * @return void
      */
     protected function init()
-    {
-
-    }
+    {   }
 } 
