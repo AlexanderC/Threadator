@@ -1,0 +1,75 @@
+<?php
+/**
+ * @author AlexanderC <self@alexanderc.me>
+ * @date 4/7/14
+ * @time 9:16 PM
+ */
+
+namespace Threadator\Communication\Driver;
+
+
+class MsgQueue extends ADriver
+{
+    const DEFAULT_MAX_SIZE = 1000000;
+
+    /**
+     * @var resource
+     */
+    protected $queue;
+
+    /**
+     * @throws \RuntimeException
+     */
+    protected function init()
+    {
+        $file = sprintf("%s/%s", sys_get_temp_dir(), base64_encode($this->identifier));
+        @touch($file);
+        $this->queue = msg_get_queue(ftok($file, 'm'));
+
+        if(!$this->queue) {
+            throw new \RuntimeException("Unable to get message queue");
+        }
+    }
+
+    /**
+     * @param int $key
+     * @param mixed $message
+     * @return bool
+     */
+    public function send($key, $message)
+    {
+        return msg_send($this->queue, $key, $message, true, false);
+    }
+
+    /**
+     * Try to get message, but do not block
+     *
+     * @param int $key
+     * @param mixed $message
+     * @return bool
+     */
+    public function touch($key, & $message)
+    {
+        return msg_receive($this->queue, $key, $msgtype, self::DEFAULT_MAX_SIZE, $message, true, MSG_IPC_NOWAIT);
+    }
+
+    /**
+     * Block until the first message arrives
+     *
+     * @param int $key
+     * @param mixed $message
+     * @return bool
+     */
+    public function receive($key, & $message)
+    {
+        return msg_receive($this->queue, $key, $msgtype, self::DEFAULT_MAX_SIZE, $message, true, 0);
+    }
+
+    /**
+     * @return void
+     */
+    public function __destruct()
+    {
+        msg_remove_queue($this->queue);
+    }
+} 

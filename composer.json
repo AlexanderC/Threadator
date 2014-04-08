@@ -1,0 +1,23 @@
+{
+    "name": "alexanderc/threadator",
+    "description": "Thread[ator] is an attempt to build an decent library for multithreading in PHP",
+    "minimum-stability": "stable",
+    "license": "Apache-2.0",
+    "authors": [
+        {
+            "name": "AlexanderC",
+            "email": "self@alexanderc.me"
+        }
+    ],
+    "require": {
+        "php": ">=5.5",
+        "ext-posix": "*",
+        "ext-pcntl": "*",
+        "ext-redis": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Threadator\\": "src"
+        }
+    }
+}
