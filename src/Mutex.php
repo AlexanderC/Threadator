@@ -149,36 +149,36 @@ class Mutex implements IMutexType
     protected function generateIdentifier()
     {
         switch($this->type) {
-            case self::T_IDX:
+            case self::T_IDX: // case simple string identifier of an object with __toString implementation
                 $this->identifier = sprintf("_thdt_mutex_tidx:%s", (string) $this->identity);
                 break;
-            case self::T_FILE:
+            case self::T_FILE: // case simple file path like /tmp/somefilehere.tmp
                 $this->identifier = sprintf("_thdt_mutex_tfile:%s", (string) $this->identity);
                 break;
             case self::T_FUNCTION:
-                if($this->identity instanceof \Closure) { // case of lambda
+                if($this->identity instanceof \Closure) { // case of lambda function
                     $this->identifier = sprintf("_thdt_mutex_tfunction:%s", spl_object_hash($this->identity));
-                } else {
+                } else { // case simple function name like "foo"
                     $this->identifier = sprintf("_thdt_mutex_tfunction:%s", (string) $this->identity);
                 }
 
                 break;
             case self::T_METHOD:
-                if(is_array($this->identity)) {
+                if(is_array($this->identity)) { // case callable like declaration [class|object, method]
                     $class = is_object($this->identity[0]) ? get_class($this->identity[0]) : $this->identity[0];
                     $this->identifier = sprintf("_thdt_mutex_tmethod:%s::%s", $class, $this->identity[1]);
-                } else {
+                } else { // case static call method declaration like Foo::bar
                     $this->identifier = sprintf("_thdt_mutex_tmethod:%s", (string) $this->identity);
                 }
                 break;
             case self::T_CLASS:
-                if(is_object($this->identity)) {
+                if(is_object($this->identity)) { // case object provided
                     $this->identifier = sprintf("_thdt_mutex_tclass:%s", get_class($this->identity));
-                } else {
+                } else { // case simple class name like Foo
                     $this->identifier = sprintf("_thdt_mutex_tclass:%s", (string) $this->identity);
                 }
                 break;
-            case self::T_OBJECT:
+            case self::T_OBJECT: // case an object required mutex during current session
                 $this->identifier = sprintf("_thdt_mutex_tobject:%s", spl_object_hash($this->identity));
                 break;
 
