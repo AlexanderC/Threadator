@@ -18,6 +18,11 @@ class Redis extends ADriver
     protected $client;
 
     /**
+     * @var array
+     */
+    protected $listsKeyToClean = [];
+
+    /**
      * @return void
      */
     protected function init()
@@ -45,6 +50,11 @@ class Redis extends ADriver
     public function send($key, $message)
     {
         $result = 0 < $this->client->rPush($key, $message);
+
+        if($result) {
+            $this->listsKeyToClean[] = $key;
+        }
+
         return $result;
     }
 
@@ -59,6 +69,10 @@ class Redis extends ADriver
     {
         if($this->client->lSize($key) > 0) {
             $message = $this->client->lPop($key);
+
+            // remove key occurrence(first one) from the array
+            unset($this->listsKeyToClean[array_search($key, $this->listsKeyToClean, true)]);
+
             return true;
         }
 
@@ -80,6 +94,9 @@ class Redis extends ADriver
 
         $message = $this->client->lPop($key);
 
+        // remove key occurrence(first one) from the array
+        unset($this->listsKeyToClean[array_search($key, $this->listsKeyToClean, true)]);
+
         return true;
     }
 
@@ -88,6 +105,9 @@ class Redis extends ADriver
      */
     public function __destruct()
     {
+        // remove all lists
+        $this->client->delete($this->listsKeyToClean);
+
         $this->client->close();
     }
 } 

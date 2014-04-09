@@ -14,6 +14,7 @@ use Threadator\Communication\TThreadCommunication;
 abstract class Thread implements IThreadState
 {
     use TThreadCommunication;
+    use TThreadMutex;
 
     /**
      * @var int
@@ -248,10 +249,25 @@ abstract class Thread implements IThreadState
     }
 
     /**
+     * Free resources and other things
+     *
+     * @return void
+     */
+    protected function tearDown()
+    {
+        // destruct communication
+        unset($this->communication);
+        // destruct all mutexes
+        $this->unloadMutexSet();
+    }
+
+    /**
      * @return void
      */
     protected function _exit()
     {
+        // teardown greacefully
+        $this->tearDown();
         posix_kill(posix_getpid(), SIGKILL);
     }
 } 
