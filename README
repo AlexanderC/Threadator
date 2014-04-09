@@ -1,0 +1,5 @@
+Threadator is an attempt to build a mostly native PHP library for multithreading. Sugar: Mutex, Communication
+
+Examples
+========
+    For examples check test folder
