@@ -34,11 +34,16 @@ class EchoThread extends \Threadator\Thread
      */
     protected function _run()
     {
+        $mutex = new \Threadator\Mutex('echo', \Threadator\Mutex::T_FUNCTION);
+
         // send a message
         $this->sendMessage("#{$this->getPid()} ok");
 
         sleep(mt_rand(1, 3));
+
+        $mutex->waitAcquire();
         echo $this->stringToEcho, "\n";
+        $mutex->release();
     }
 
     /**
