@@ -5,12 +5,9 @@
  * @time 10:30 PM
  */
 
+require "./bootstrap.php";
+
 define('T_MAX', 5);
-
-require __DIR__ . '/../vendor/autoload.php';
-
-$runtime = new \Threadator\Runtime("redis");
-$factory = new \Threadator\Factory($runtime);
 
 for($i = 0; $i < T_MAX; $i++) {
     /** @var \Threadator\Thread $thread */
