@@ -12,8 +12,10 @@
     "require": {
         "php": ">=5.5",
         "ext-posix": "*",
-        "ext-pcntl": "*",
-        "ext-redis": "*"
+        "ext-pcntl": "*"
+    },
+    "suggest": {
+        "ext-redis": "You may need it when using Redis communication driver"
     },
     "autoload": {
         "psr-4": {

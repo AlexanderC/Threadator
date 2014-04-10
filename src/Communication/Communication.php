@@ -26,7 +26,7 @@ class Communication
      */
     public function __construct($identifier, $driverName, array $driverParameters = [])
     {
-        $class = sprintf(self::DRIVER_TPL, ucfirst($driverName));
+        $class = class_exists($driverName) ? $driverName : sprintf(self::DRIVER_TPL, ucfirst($driverName));
         $this->driver = new $class($identifier, $driverParameters);
     }
 
