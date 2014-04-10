@@ -21,11 +21,11 @@ $runtime->run();
 
 // receive thread messages
 $messages = [];
-/*foreach($runtime->receiveMessage() as $result => $message) {
+foreach($runtime->receiveMessage() as $result => $message) {
     if($result) {
         $messages[] = $message;
     }
-}*/
+}
 echo "Messages: " . implode(", ", $messages) . "\n";
 
 // end work
