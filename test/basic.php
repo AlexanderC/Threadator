@@ -7,14 +7,12 @@
 
 require "./bootstrap.php";
 
-define('T_MAX', 5);
-
 for($i = 0; $i < T_MAX; $i++) {
     /** @var \Threadator\Thread $thread */
     $thread = $factory->createCallable(function($thread) {
             if(!mt_rand(0, 1)) {
                 // create mutex
-                $mutex = new \Threadator\Mutex("echo", \Threadator\Mutex::T_FUNCTION);
+                $mutex = $thread->createMutex("echo", \Threadator\Mutex::T_FUNCTION);
 
                 // acquire mutex
                 if($mutex->waitAcquire()) {
@@ -34,6 +32,7 @@ for($i = 0; $i < T_MAX; $i++) {
 
             //echo "Running thread #{$thread->getPid()}...\n";
 
+            $message = "test";
             $thread->receiveMessage($message);
             $thread->sendMessage("#{$thread->getPid()}: {$message}");
         });
@@ -45,7 +44,9 @@ echo "Main process #{$runtime->getPid()} running\n";
 $runtime->run();
 
 // send a message to all threads
-$runtime->broadcastMessage(microtime(true));
+foreach($runtime->broadcastMessage(microtime(true)) as list($result, $thread)) {
+    echo "Result for msg #{$thread->getPid()} -> {$result}\n";
+}
 
 // receive thread messages
 $messages = [];

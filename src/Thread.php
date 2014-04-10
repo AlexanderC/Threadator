@@ -99,8 +99,8 @@ abstract class Thread implements IThreadState
      */
     protected function tearDown()
     {
-        // destruct communication
-        unset($this->communication);
+        // destruct communication [NOT NECESSARY]
+        //unset($this->communication);
         // destruct all mutexes
         $this->unloadMutexSet();
     }

@@ -18,19 +18,21 @@ class Redis extends ADriver
     protected $client;
 
     /**
-     * @var array
+     * @var string
      */
-    protected $listsKeyToClean = [];
+    protected $prefix;
 
     /**
      * @return void
      */
     protected function init()
     {
+        $this->prefix = sprintf("%s#", base64_encode($this->identifier));
+
         $this->client = new \Redis();
         call_user_func_array([$this->client, 'connect'], func_get_args());
         $this->client->setOption(\Redis::OPT_SERIALIZER, \Redis::SERIALIZER_PHP);
-        $this->client->setOption(\Redis::OPT_PREFIX, sprintf("%s#", base64_encode($this->identifier)));
+        $this->client->setOption(\Redis::OPT_PREFIX, $this->prefix);
     }
 
     /**
@@ -51,10 +53,6 @@ class Redis extends ADriver
     {
         $result = 0 < $this->client->rPush($key, $message);
 
-        if($result) {
-            $this->listsKeyToClean[] = $key;
-        }
-
         return $result;
     }
 
@@ -69,9 +67,6 @@ class Redis extends ADriver
     {
         if($this->client->lSize($key) > 0) {
             $message = $this->client->lPop($key);
-
-            // remove key occurrence(first one) from the array
-            unset($this->listsKeyToClean[array_search($key, $this->listsKeyToClean, true)]);
 
             return true;
         }
@@ -94,9 +89,6 @@ class Redis extends ADriver
 
         $message = $this->client->lPop($key);
 
-        // remove key occurrence(first one) from the array
-        unset($this->listsKeyToClean[array_search($key, $this->listsKeyToClean, true)]);
-
         return true;
     }
 
@@ -105,8 +97,17 @@ class Redis extends ADriver
      */
     public function __destruct()
     {
-        // remove all lists
-        $this->client->delete($this->listsKeyToClean);
+        // clean all messages sent and not parsed to skip unexpected errors
+        // on next run...
+        // Note: all keys have full name, trim keys until getting them without prefix
+        $prefixOffset = strlen($this->prefix);
+        $keys = array_map(function($key) use ($prefixOffset) {
+                return substr($key, $prefixOffset);
+            }, array_filter($this->client->keys("*"), function($key) {
+                return 0 === preg_match(sprintf("/^(%s)/", preg_quote($this->prefix, "/")), "", $key);
+            }));
+
+        $this->client->delete($keys);
 
         $this->client->close();
     }
