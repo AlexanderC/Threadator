@@ -20,13 +20,14 @@ class Communication
     protected $driver;
 
     /**
-     * @param string $driverName
      * @param string $identifier
+     * @param string $driverName
+     * @param array $driverParameters
      */
-    public function __construct($driverName, $identifier)
+    public function __construct($identifier, $driverName, array $driverParameters = [])
     {
         $class = sprintf(self::DRIVER_TPL, ucfirst($driverName));
-        $this->driver = new $class($identifier);
+        $this->driver = new $class($identifier, $driverParameters);
     }
 
     /**
@@ -72,13 +73,14 @@ class Communication
     }
 
     /**
-     * @param string $driverName
      * @param Runtime $runtime
+     * @param string $driverName
+     * @param array $driverParameters
      * @return Communication
      */
-    public static function create($driverName, Runtime $runtime)
+    public static function create(Runtime $runtime, $driverName, array $driverParameters = [])
     {
-        return new self($driverName, sprintf("_thdt_comm_%s", $runtime->getPid()));
+        return new self(sprintf("_thdt_comm_%s", $runtime->getPid()), $driverName, $driverParameters);
     }
 
     /**

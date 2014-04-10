@@ -28,7 +28,7 @@ class Redis extends ADriver
     protected function init()
     {
         $this->client = new \Redis();
-        $this->client->connect('127.0.0.1');
+        call_user_func_array([$this->client, 'connect'], func_get_args());
         $this->client->setOption(\Redis::OPT_SERIALIZER, \Redis::SERIALIZER_PHP);
         $this->client->setOption(\Redis::OPT_PREFIX, sprintf("%s#", base64_encode($this->identifier)));
     }

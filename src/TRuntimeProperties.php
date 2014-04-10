@@ -8,6 +8,8 @@
 namespace Threadator;
 
 
+use Threadator\Communication\Communication;
+
 trait TRuntimeProperties
 {
     /**
@@ -65,11 +67,19 @@ trait TRuntimeProperties
     }
 
     /**
-     * @return \Threadator\Communication\Communication\Communication
+     * @return Communication
      */
     public function getCommunication()
     {
         return $this->communication;
+    }
+
+    /**
+     * @param Communication $communication
+     */
+    public function setCommunication(Communication $communication)
+    {
+        $this->communication = $communication;
     }
 
     /**

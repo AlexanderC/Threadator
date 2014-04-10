@@ -16,13 +16,20 @@ abstract class ADriver
     protected $identifier;
 
     /**
-     * @param string $identifier
+     * @var array
      */
-    public function __construct($identifier)
+    protected $parameters;
+
+    /**
+     * @param $identifier
+     * @param array $parameters
+     */
+    public function __construct($identifier, array $parameters = [])
     {
         $this->identifier = (string) $identifier;
+        $this->parameters = $parameters;
 
-        $this->init();
+        call_user_func_array([$this, 'init'], $this->parameters);
     }
 
     /**
@@ -30,7 +37,7 @@ abstract class ADriver
      */
     public function __clone()
     {
-        $this->init();
+        call_user_func_array([$this, 'init'], $this->parameters);
     }
 
     /**

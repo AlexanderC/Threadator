@@ -17,20 +17,23 @@ class Runtime
     use TRuntimeCommunication;
 
     /**
-     * @param string $communicationDriver
+     * Set pid
      */
-    public function __construct($communicationDriver)
+    public function __construct()
     {
         $this->pid = posix_getpid();
-
-        $this->communication = Communication::create($communicationDriver, $this);
     }
 
     /**
      * @return $this
+     * @throws \RuntimeException
      */
     public function run()
     {
+        if(!($this->communication instanceof Communication)) {
+            throw new \RuntimeException("You may set communication first");
+        }
+
         /** @var Thread $thread */
         foreach($this->pool as $thread) {
             if($thread->isWaiting()) {
