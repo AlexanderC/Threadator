@@ -7,7 +7,9 @@ You may notice that there are other packages like this, but:
 - You have full controll on your threads (Mutex and bidirectional Communication betweed threads and master)
 
 # Installation
-	Add "alexanderc/threadator": "dev-master" in your [Composer](https://getcomposer.org/) section
+- Via [Composer](https://getcomposer.org/)
+
+		"alexanderc/threadator": "dev-master"
 
 # Basic usage
 ```php
