@@ -27,6 +27,9 @@ $runtime->setCommunication($communication);
 
 // now we can create some threads
 for($i = 0; $i < 5; $i++) {
+	// you can also use your own thread implementation by calling $factory->create("You\\Thread\\Implementation\\TestThread");
+	// IMPORTANT: your TestThread class should extend Threadator\Thread
+	
     /** @var \Threadator\Thread $thread */
        $thread = $factory->createCallable(function($thread) {
               // create mutex

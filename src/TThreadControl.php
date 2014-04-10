@@ -13,7 +13,7 @@ trait TThreadControl
     /**
      * @throws \RuntimeException
      */
-    public function detach()
+    final public function detach()
     {
         if(-1 === posix_setsid()) {
             throw new \RuntimeException("Unable to detach thread");
@@ -28,7 +28,7 @@ trait TThreadControl
     /**
      * @return $this
      */
-    public function join()
+    final public function join()
     {
         pcntl_waitpid($this->pid, $status, WUNTRACED);
 

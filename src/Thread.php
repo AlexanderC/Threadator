@@ -32,16 +32,23 @@ abstract class Thread implements IThreadState
     }
 
     /**
+     * This method is called before running tht thread
+     *
      * @return void
      */
     abstract protected function init();
 
     /**
+     * This method would be called inside the thread
+     *
      * @return void
      */
     abstract protected function _run();
 
     /**
+     * This method would be called after _run() execution or
+     * a SIGTERM signal sent
+     *
      * @return void
      */
     abstract protected function unload();
@@ -50,7 +57,7 @@ abstract class Thread implements IThreadState
      * @return $this
      * @throws \RuntimeException
      */
-    public function run()
+    final public function run()
     {
         $this->state = self::RUNNING;
 
@@ -81,7 +88,7 @@ abstract class Thread implements IThreadState
     /**
      * @return void
      */
-    protected function handleSigTerm()
+    final protected function handleSigTerm()
     {
         $this->unload();
 
@@ -90,14 +97,12 @@ abstract class Thread implements IThreadState
         $this->_exit();
     }
 
-
-
     /**
      * Free resources and other things
      *
      * @return void
      */
-    protected function tearDown()
+    final protected function tearDown()
     {
         // destruct communication [NOT NECESSARY]
         //unset($this->communication);
@@ -108,7 +113,7 @@ abstract class Thread implements IThreadState
     /**
      * @return void
      */
-    protected function _exit()
+    final protected function _exit()
     {
         // teardown greacefully
         $this->tearDown();
