@@ -104,7 +104,7 @@ class Redis extends ADriver
         $keys = array_map(function($key) use ($prefixOffset) {
                 return substr($key, $prefixOffset);
             }, array_filter($this->client->keys("*"), function($key) {
-                return 0 === preg_match(sprintf("/^(%s)/", preg_quote($this->prefix, "/")), "", $key);
+                 return preg_match(sprintf("/^(%s)/", preg_quote($this->prefix, "/")), $key);
             }));
 
         $this->client->delete($keys);
