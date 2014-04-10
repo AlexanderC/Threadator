@@ -43,7 +43,6 @@ class Redis extends ADriver
         return $this->client;
     }
 
-
     /**
      * @param int $key
      * @param mixed $message

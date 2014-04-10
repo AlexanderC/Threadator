@@ -38,6 +38,14 @@ trait TRuntimeProperties
     }
 
     /**
+     * @return int
+     */
+    public function getThreadsCount()
+    {
+        return count($this->pool);
+    }
+
+    /**
      * @param int $pid
      * @return null|Thread
      */
