@@ -58,6 +58,10 @@ class BalanceAwareRuntime
 
             // join all this threads
             $this->runtime->join();
+            
+            if(is_callable($this->afterJoinCallback)) {
+                call_user_func($this->afterJoinCallback, $this->runtime);
+            }
         }
         return $this;
     }
