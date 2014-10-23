@@ -29,6 +29,11 @@ trait TBalanceAwareRuntimeProperties
      * @var callable
      */
     protected $afterRunCallback;
+    
+    /**
+     * @var callable
+     */
+    protected $afterJoinCallback;
 
     /**
      * @param callable $setup
@@ -86,5 +91,24 @@ trait TBalanceAwareRuntimeProperties
     public function getAfterRunCallback()
     {
         return $this->afterRunCallback;
+    }
+    
+    /**
+     * @param callable $afterJoinCallback
+     * @return $this
+     */
+    public function setAfterJoinCallback(callable $afterJoinCallback)
+    {
+        $this->afterJoinCallback = $afterJoinCallback;
+
+        return $this;
+    }
+
+    /**
+     * @return callable
+     */
+    public function getAfterJoinCallback()
+    {
+        return $this->afterJoinCallback;
     }
 } 
